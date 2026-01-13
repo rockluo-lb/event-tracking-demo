@@ -1,0 +1,44 @@
+{
+  "name": "event-tracking-demo",
+  "version": "1.0.0",
+  "description": "Plausible Tracker SDK",
+  "type": "module",
+  "main": "dist/plausible-tracker.umd.cjs",
+  "module": "dist/plausible-tracker.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/plausible-tracker.js",
+      "require": "./dist/plausible-tracker.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "npx tsx server/index.ts",
+    "start": "concurrently \"pnpm dev\" \"pnpm run server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+    "geoip-lite": "^1.4.10",
+    "log4js": "^6.9.1",
+    "ua-parser-js": "^2.0.7"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
+    "@types/cors": "^2.8.17",
+    "concurrently": "^9.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.0",
+    "vite": "^7.3.1"
+  }
+}

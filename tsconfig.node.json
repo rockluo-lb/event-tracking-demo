@@ -1,0 +1,29 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": { "@/*": ["src/*"], "$/*": ["./*"] },
+		"composite": true,
+		"target": "ESNext",
+		"lib": ["ESNext"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"noEmit": true,
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedSideEffectImports": true
+	},
+	"include": [
+		"vite.config.ts",
+		"src/plugins",
+		"src/themes",
+		"src/constant",
+		"src/global.d.ts",
+		"src/stores/spectra.ts"
+	]
+}

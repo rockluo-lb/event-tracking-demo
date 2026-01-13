@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plausible Tracker SDK Demo</title>
+    <style>
+      :root {
+        --bg-primary: #0f0f0f;
+        --bg-secondary: #1a1a1a;
+        --bg-tertiary: #252525;
+        --accent: #00d4aa;
+        --accent-dim: #00a88a;
+        --text-primary: #f5f5f5;
+        --text-secondary: #a0a0a0;
+        --border: #333;
+        --success: #22c55e;
+        --warning: #f59e0b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 3rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, var(--accent), #00ffcc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--accent);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .card-title::before {
+        content: '▸';
+      }
+
+      .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .btn {
+        font-family: inherit;
+        font-size: 0.875rem;
+        padding: 0.625rem 1.25rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .btn:hover {
+        border-color: var(--accent);
+        background: rgba(0, 212, 170, 0.1);
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--bg-primary);
+        font-weight: 500;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-dim);
+        border-color: var(--accent-dim);
+      }
+
+      .input-group {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .input {
+        flex: 1;
+        font-family: inherit;
+        font-size: 0.875rem;
+        padding: 0.625rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        outline: none;
+        transition: border-color 0.15s ease;
+      }
+
+      .input:focus {
+        border-color: var(--accent);
+      }
+
+      .input::placeholder {
+        color: var(--text-secondary);
+      }
+
+      .console {
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        height: 320px;
+        overflow-y: auto;
+        font-size: 0.8125rem;
+      }
+
+      .console::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .console::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .console::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      .log-entry {
+        padding: 0.375rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        gap: 0.75rem;
+        align-items: flex-start;
+      }
+
+      .log-entry:last-child {
+        border-bottom: none;
+      }
+
+      .log-time {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .log-type {
+        font-size: 0.6875rem;
+        padding: 0.125rem 0.5rem;
+        border-radius: 3px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+
+      .log-type.event {
+        background: rgba(0, 212, 170, 0.15);
+        color: var(--accent);
+      }
+
+      .log-type.pageview {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+      }
+
+      .log-type.info {
+        background: rgba(34, 197, 94, 0.15);
+        color: var(--success);
+      }
+
+      .log-content {
+        flex: 1;
+        word-break: break-all;
+      }
+
+      .log-content code {
+        background: var(--bg-tertiary);
+        padding: 0.125rem 0.375rem;
+        border-radius: 3px;
+        font-size: 0.75rem;
+      }
+
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-size: 0.8125rem;
+      }
+
+      .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .nav-demo {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .nav-link {
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: 0.375rem 0.75rem;
+        border-radius: 4px;
+        transition: all 0.15s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--text-primary);
+        background: var(--bg-tertiary);
+      }
+
+      footer {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Plausible Tracker SDK</h1>
+        <p class="subtitle">Event Tracking Development Environment</p>
+      </header>
+
+      <div class="status-bar">
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          <span>SDK Initialized</span>
+        </div>
+        <nav class="nav-demo">
+          <a href="#home" class="nav-link">Home</a>
+          <a href="#products" class="nav-link">Products</a>
+          <a href="#about" class="nav-link">About</a>
+        </nav>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Custom Events</div>
+        <div class="input-group">
+          <input type="text" id="eventName" class="input" placeholder="Event name (e.g., signup, download)" value="button_click" />
+          <input type="text" id="eventProps" class="input" placeholder='Props JSON (e.g., {"method": "HTTP"})' value='{"button_id": "cta-1"}' />
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="sendCustomEvent()">Send Event</button>
+          <button class="btn" onclick="trackSignup()">Track Signup</button>
+          <button class="btn" onclick="trackDownload()">Track Download</button>
+          <button class="btn" onclick="trackPurchase()">Track Purchase</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Page Navigation</div>
+        <div class="btn-group">
+          <button class="btn" onclick="navigateTo('/dashboard')">Go to /dashboard</button>
+          <button class="btn" onclick="navigateTo('/settings')">Go to /settings</button>
+          <button class="btn" onclick="navigateTo('/profile')">Go to /profile</button>
+          <button class="btn" onclick="trackManualPageview()">Manual Pageview</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Event Console</div>
+        <div class="console" id="console">
+          <div class="log-entry">
+            <span class="log-time">--:--:--</span>
+            <span class="log-type info">INFO</span>
+            <span class="log-content">Waiting for events...</span>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>Plausible Tracker SDK Demo • Development Mode</p>
+      </footer>
+    </div>
+
+    <script type="module">
+      import { Plausible } from './plausible/lib/index.ts';
+
+      const consoleEl = document.getElementById('console');
+
+      function log(type, message, data) {
+        const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `
+          <span class="log-time">${time}</span>
+          <span class="log-type ${type}">${type}</span>
+          <span class="log-content">${message}${data ? ` <code>${JSON.stringify(data)}</code>` : ''}</span>
+        `;
+        consoleEl.appendChild(entry);
+        consoleEl.scrollTop = consoleEl.scrollHeight;
+      }
+
+      const { trackEvent, trackPageview, enableAutoPageviews } = Plausible({
+        apiHost: 'http://localhost:8080/api/event',
+        trackLocalhost: true,
+      });
+
+      const cleanup = enableAutoPageviews();
+      log('info', 'Auto pageviews enabled');
+
+      window.sendCustomEvent = function() {
+        const eventName = document.getElementById('eventName').value || 'custom_event';
+        let props = {};
+        const propsInput = document.getElementById('eventProps').value;
+        if (propsInput) {
+          props = JSON.parse(propsInput);
+        }
+        trackEvent(eventName, { props });
+        log('event', `Sent: ${eventName}`, props);
+      };
+
+      window.trackSignup = function() {
+        trackEvent('signup', { props: { method: 'email', plan: 'free' } });
+        log('event', 'Sent: signup', { method: 'email', plan: 'free' });
+      };
+
+      window.trackDownload = function() {
+        trackEvent('download', { props: { file: 'sdk-v1.0.0.zip', format: 'zip' } });
+        log('event', 'Sent: download', { file: 'sdk-v1.0.0.zip', format: 'zip' });
+      };
+
+      window.trackPurchase = function() {
+        trackEvent('purchase', { props: { product: 'Pro Plan', amount: 99 } });
+        log('event', 'Sent: purchase', { product: 'Pro Plan', amount: 99 });
+      };
+
+      window.navigateTo = function(path) {
+        history.pushState({}, '', path);
+        log('pageview', `Navigated to: ${path}`);
+      };
+
+      window.trackManualPageview = function() {
+        trackPageview();
+        log('pageview', `Manual pageview: ${location.pathname}`);
+      };
+
+      log('info', `SDK initialized at ${location.href}`);
+    </script>
+  </body>
+</html>
