@@ -1,3 +1,4 @@
+import type { EventProps } from './types';
 import type { PlausibleOptions } from './tracker';
 
 type EventPayload = {
@@ -12,7 +13,7 @@ type EventPayload = {
 
 export type EventOptions = {
   readonly callback?: () => void;
-  readonly props?: { readonly [propName: string]: string | number | boolean };
+  readonly props?: EventProps;
 };
 
 export function sendEvent(eventName: string, data: Required<PlausibleOptions>, options?: EventOptions): void {
@@ -31,11 +32,8 @@ export function sendEvent(eventName: string, data: Required<PlausibleOptions>, o
     );
   }
 
-  const defaultParams = {
-    'Relative Path': window.location.pathname,
-  };
   const optionsParams = options?.props || {};
-  const resParams = { ...defaultParams, ...optionsParams };
+  const filteredParams = filterUndefined(optionsParams);
 
   const payload: EventPayload = {
     n: eventName,
@@ -44,7 +42,7 @@ export function sendEvent(eventName: string, data: Required<PlausibleOptions>, o
     r: data.referrer,
     w: data.deviceWidth,
     h: data.hashMode ? 1 : 0,
-    p: JSON.stringify(resParams),
+    p: JSON.stringify(filteredParams),
   };
 
   const req = new XMLHttpRequest();
@@ -62,4 +60,10 @@ export function sendEvent(eventName: string, data: Required<PlausibleOptions>, o
 function safeGetURLPath(url: string): string {
   const urlObj = new URL(url);
   return urlObj.origin + urlObj.pathname;
+}
+
+function filterUndefined<T extends Record<string, unknown>>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined)
+  ) as Partial<T>;
 }

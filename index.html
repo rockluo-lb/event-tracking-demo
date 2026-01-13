@@ -16,6 +16,7 @@
         --border: #333;
         --success: #22c55e;
         --warning: #f59e0b;
+        --info: #3b82f6;
       }
 
       * {
@@ -82,6 +83,12 @@
 
       .card-title::before {
         content: '▸';
+      }
+
+      .card-desc {
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
       }
 
       .btn-group {
@@ -155,7 +162,7 @@
         border: 1px solid var(--border);
         border-radius: 8px;
         padding: 1rem;
-        height: 320px;
+        height: 280px;
         overflow-y: auto;
         font-size: 0.8125rem;
       }
@@ -275,6 +282,53 @@
         background: var(--bg-tertiary);
       }
 
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .field-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .field-label {
+        font-size: 0.6875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+      }
+
+      .field-input {
+        font-family: inherit;
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        outline: none;
+        width: 100%;
+      }
+
+      .field-input:focus {
+        border-color: var(--accent);
+      }
+
+      .field-input::placeholder {
+        color: #555;
+      }
+
+      .section-label {
+        font-size: 0.6875rem;
+        color: var(--info);
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.05em;
+      }
+
       footer {
         text-align: center;
         padding-top: 2rem;
@@ -305,26 +359,115 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Custom Events</div>
+        <div class="card-title">Preset Fields Event</div>
+        <p class="card-desc">使用预设字段 int1~10, string1~10 上报事件，由产品定义每个字段的业务含义</p>
+        
         <div class="input-group">
-          <input type="text" id="eventName" class="input" placeholder="Event name (e.g., signup, download)" value="button_click" />
-          <input type="text" id="eventProps" class="input" placeholder='Props JSON (e.g., {"method": "HTTP"})' value='{"button_id": "cta-1"}' />
+          <input type="text" id="presetEventName" class="input" placeholder="Event name" value="user_action" />
         </div>
+
+        <div class="section-label">Integer Fields (int1 ~ int10)</div>
+        <div class="field-grid">
+          <div class="field-item">
+            <label class="field-label">int1</label>
+            <input type="number" id="int1" class="field-input" value="1" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int2</label>
+            <input type="number" id="int2" class="field-input" value="2" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int3</label>
+            <input type="number" id="int3" class="field-input" value="3" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int4</label>
+            <input type="number" id="int4" class="field-input" value="4" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int5</label>
+            <input type="number" id="int5" class="field-input" value="5" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int6</label>
+            <input type="number" id="int6" class="field-input" value="6" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int7</label>
+            <input type="number" id="int7" class="field-input" value="7" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int8</label>
+            <input type="number" id="int8" class="field-input" value="8" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int9</label>
+            <input type="number" id="int9" class="field-input" value="9" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">int10</label>
+            <input type="number" id="int10" class="field-input" value="10" />
+          </div>
+        </div>
+
+        <div class="section-label">String Fields (string1 ~ string10)</div>
+        <div class="field-grid">
+          <div class="field-item">
+            <label class="field-label">string1</label>
+            <input type="text" id="string1" class="field-input" value="string1" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string2</label>
+            <input type="text" id="string2" class="field-input" value="string2" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string3</label>
+            <input type="text" id="string3" class="field-input" value="string3" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string4</label>
+            <input type="text" id="string4" class="field-input" value="string4" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string5</label>
+            <input type="text" id="string5" class="field-input" value="string5" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string6</label>
+            <input type="text" id="string6" class="field-input" value="string6" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string7</label>
+            <input type="text" id="string7" class="field-input" value="string7" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string8</label>
+            <input type="text" id="string8" class="field-input" value="string8" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string9</label>
+            <input type="text" id="string9" class="field-input" value="string9" />
+          </div>
+          <div class="field-item">
+            <label class="field-label">string10</label>
+            <input type="text" id="string10" class="field-input" value="string10" />
+          </div>
+        </div>
+
         <div class="btn-group">
-          <button class="btn btn-primary" onclick="sendCustomEvent()">Send Event</button>
-          <button class="btn" onclick="trackSignup()">Track Signup</button>
-          <button class="btn" onclick="trackDownload()">Track Download</button>
-          <button class="btn" onclick="trackPurchase()">Track Purchase</button>
+          <button class="btn btn-primary" onclick="sendPresetEvent()">Send Preset Event</button>
+          <button class="btn" onclick="fillSampleData()">Fill Sample Data</button>
+          <button class="btn" onclick="clearPresetFields()">Clear Fields</button>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">Page Navigation</div>
+        <div class="card-title">Quick Events</div>
         <div class="btn-group">
-          <button class="btn" onclick="navigateTo('/dashboard')">Go to /dashboard</button>
-          <button class="btn" onclick="navigateTo('/settings')">Go to /settings</button>
-          <button class="btn" onclick="navigateTo('/profile')">Go to /profile</button>
-          <button class="btn" onclick="trackManualPageview()">Manual Pageview</button>
+          <button class="btn" onclick="trackButtonClick()">Button Click</button>
+          <button class="btn" onclick="trackFormSubmit()">Form Submit</button>
+          <button class="btn" onclick="trackAddToCart()">Add to Cart</button>
+          <button class="btn" onclick="trackCheckout()">Checkout</button>
         </div>
       </div>
 
@@ -340,7 +483,7 @@
       </div>
 
       <footer>
-        <p>Plausible Tracker SDK Demo • Development Mode</p>
+        <p>Plausible Tracker SDK Demo • Preset Fields: int1~10, string1~10</p>
       </footer>
     </div>
 
@@ -367,46 +510,101 @@
         trackLocalhost: true,
       });
 
-      const cleanup = enableAutoPageviews();
-      log('info', 'Auto pageviews enabled');
+      enableAutoPageviews();
+      log('info', 'SDK initialized with preset fields support');
 
-      window.sendCustomEvent = function() {
-        const eventName = document.getElementById('eventName').value || 'custom_event';
-        let props = {};
-        const propsInput = document.getElementById('eventProps').value;
-        if (propsInput) {
-          props = JSON.parse(propsInput);
+      function getPresetFields() {
+        const props = {};
+        
+        for (let i = 1; i <= 10; i++) {
+          const intValue = document.getElementById(`int${i}`).value;
+          const stringValue = document.getElementById(`string${i}`).value;
+          
+          if (intValue !== '') {
+            props[`int${i}`] = parseInt(intValue, 10);
+          }
+          if (stringValue !== '') {
+            props[`string${i}`] = stringValue;
+          }
         }
+        
+        return props;
+      }
+
+      window.sendPresetEvent = function() {
+        const eventName = document.getElementById('presetEventName').value || 'custom_event';
+        const props = getPresetFields();
         trackEvent(eventName, { props });
         log('event', `Sent: ${eventName}`, props);
       };
 
-      window.trackSignup = function() {
-        trackEvent('signup', { props: { method: 'email', plan: 'free' } });
-        log('event', 'Sent: signup', { method: 'email', plan: 'free' });
+      window.fillSampleData = function() {
+        document.getElementById('int1').value = 100;
+        document.getElementById('int2').value = 25;
+        document.getElementById('int3').value = 1;
+        document.getElementById('string1').value = 'homepage';
+        document.getElementById('string2').value = 'banner_top';
+        document.getElementById('string3').value = 'campaign_2024';
+        log('info', 'Sample data filled');
       };
 
-      window.trackDownload = function() {
-        trackEvent('download', { props: { file: 'sdk-v1.0.0.zip', format: 'zip' } });
-        log('event', 'Sent: download', { file: 'sdk-v1.0.0.zip', format: 'zip' });
+      window.clearPresetFields = function() {
+        for (let i = 1; i <= 10; i++) {
+          document.getElementById(`int${i}`).value = '';
+          document.getElementById(`string${i}`).value = '';
+        }
+        log('info', 'Fields cleared');
       };
 
-      window.trackPurchase = function() {
-        trackEvent('purchase', { props: { product: 'Pro Plan', amount: 99 } });
-        log('event', 'Sent: purchase', { product: 'Pro Plan', amount: 99 });
+      window.trackButtonClick = function() {
+        trackEvent('button_click', { 
+          props: { 
+            int1: 1,
+            string1: 'cta_button',
+            string2: 'header'
+          } 
+        });
+        log('event', 'Sent: button_click', { int1: 1, string1: 'cta_button', string2: 'header' });
       };
 
-      window.navigateTo = function(path) {
-        history.pushState({}, '', path);
-        log('pageview', `Navigated to: ${path}`);
+      window.trackFormSubmit = function() {
+        trackEvent('form_submit', { 
+          props: { 
+            int1: 5,
+            int2: 3,
+            string1: 'contact_form',
+            string2: 'success'
+          } 
+        });
+        log('event', 'Sent: form_submit', { int1: 5, int2: 3, string1: 'contact_form', string2: 'success' });
       };
 
-      window.trackManualPageview = function() {
-        trackPageview();
-        log('pageview', `Manual pageview: ${location.pathname}`);
+      window.trackAddToCart = function() {
+        trackEvent('add_to_cart', { 
+          props: { 
+            int1: 299,
+            int2: 2,
+            string1: 'SKU-12345',
+            string2: 'Electronics',
+            string3: 'Smartphone'
+          } 
+        });
+        log('event', 'Sent: add_to_cart', { int1: 299, int2: 2, string1: 'SKU-12345', string2: 'Electronics', string3: 'Smartphone' });
       };
 
-      log('info', `SDK initialized at ${location.href}`);
+      window.trackCheckout = function() {
+        trackEvent('checkout', { 
+          props: { 
+            int1: 598,
+            int2: 2,
+            int3: 1,
+            string1: 'credit_card',
+            string2: 'USD',
+            string3: 'express_shipping'
+          } 
+        });
+        log('event', 'Sent: checkout', { int1: 598, int2: 2, int3: 1, string1: 'credit_card', string2: 'USD', string3: 'express_shipping' });
+      };
     </script>
   </body>
 </html>
