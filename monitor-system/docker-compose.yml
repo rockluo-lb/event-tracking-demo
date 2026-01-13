@@ -1,30 +1,89 @@
 version: "3.7"
 
 services:
-  # 1. Elasticsearch - 数据库
+  # ==================== ClickHouse 方案 ====================
+  
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3
+    container_name: clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./clickhouse/init:/docker-entrypoint-initdb.d
+    environment:
+      - CLICKHOUSE_DB=tracker
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - monitor-net
+
+  redis:
+    image: redis:7
+    container_name: superset_redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - monitor-net
+
+  superset:
+    image: apache/superset:3.1.0
+    container_name: superset
+    user: root
+    ports:
+      - "8088:8088"
+    volumes:
+      - superset_data:/app/superset_home
+    environment:
+      - SUPERSET_SECRET_KEY=your_secret_key_here_change_in_production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - clickhouse
+      - redis
+    networks:
+      - monitor-net
+    command: >
+      bash -c "
+        pip install clickhouse-connect &&
+        superset db upgrade &&
+        superset fab create-admin --username admin --firstname Admin --lastname User --email admin@example.com --password admin || true &&
+        superset init &&
+        superset run -h 0.0.0.0 -p 8088 --with-threads --reload
+      "
+
+  # ==================== ELK 方案 (可选) ====================
+
   elasticsearch:
-    image: elasticsearch:7.17.21 
+    image: elasticsearch:7.17.21
     container_name: elasticsearch
+    profiles:
+      - elk
     environment:
       - node.name=elasticsearch
-      - discovery.type=single-node # 单节点模式
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # 限制内存，防止 Mac 变卡
-      - xpack.security.enabled=false # 关闭安全验证，方便开发
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
     ports:
       - "9200:9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
     networks:
-      - elk-net
+      - monitor-net
 
-  # 2. Logstash - 搬运与清洗
   logstash:
     image: logstash:7.17.21
     container_name: logstash
+    profiles:
+      - elk
     volumes:
-      # 挂载配置文件
       - ./logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      # [核心步骤] 将 Mac 本地的 logs 目录挂载到容器内
       - ./logs:/usr/share/logstash/external_logs
     ports:
       - "5044:5044"
@@ -36,12 +95,13 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk-net
+      - monitor-net
 
-  # 3. Kibana - 可视化界面
   kibana:
     image: kibana:7.17.21
     container_name: kibana
+    profiles:
+      - elk
     ports:
       - "5601:5601"
     environment:
@@ -49,11 +109,14 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elk-net
+      - monitor-net
 
 volumes:
+  clickhouse_data:
+  redis_data:
+  superset_data:
   es_data:
 
 networks:
-  elk-net:
+  monitor-net:
     driver: bridge

@@ -54,3 +54,4 @@ playwright/results/
 playwright/reports/
 
 .pnpm-store/
+.playwright-mcp/
