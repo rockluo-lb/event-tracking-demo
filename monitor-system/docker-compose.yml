@@ -58,6 +58,26 @@ services:
         superset run -h 0.0.0.0 -p 8088 --with-threads --reload
       "
 
+  # ==================== Grafana 方案 (可选) ====================
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: grafana
+    profiles:
+      - grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clickhouse-datasource
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - clickhouse
+    networks:
+      - monitor-net
+
   # ==================== ELK 方案 (可选) ====================
 
   elasticsearch:
@@ -115,6 +135,7 @@ volumes:
   clickhouse_data:
   redis_data:
   superset_data:
+  grafana_data:
   es_data:
 
 networks:
